@@ -1,0 +1,12 @@
+{
+    "files.associations": {
+        "*.cpp": "cpp",
+        "*.mdx": "mdx",
+        "set_pwm_duty_cycle.h": "c",
+        "at32f435_437.h": "c",
+        "at32f435_437_conf.h": "c",
+        "at32f435_437_def.h": "c",
+        "pwm_app.h": "c",
+        "state_led.h": "c"
+    }
+}

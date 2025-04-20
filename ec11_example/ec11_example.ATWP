@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Root>
+    <MCUInfo>
+        <MCUSerials>AT32F437</MCUSerials>
+        <MCUName>AT32F437ZGT7</MCUName>
+        <MCUPackage>LQFP144</MCUPackage>
+    </MCUInfo>
+    <CRM>
+        <Mode>
+            <ModeSub name="HEXT" value="HEXT-External-Oscillator"/>
+            <ModeSub name="LEXT" value="LEXT-External-Oscillator"/>
+        </Mode>
+        <Parameters>
+            <ParametersSub name="HEXT" value="HEXT_CRYSTAL"/>
+            <ParametersSub name="LEXT" value="LEXT_CRYSTAL"/>
+        </Parameters>
+    </CRM>
+    <DEBUG>
+        <Mode>
+            <ModeSub name="Debug interface" value="SWD"/>
+        </Mode>
+    </DEBUG>
+    <EXINT>
+        <Mode>
+            <ModeSub name="EXINT6" value="TRUE"/>
+        </Mode>
+        <Parameters>
+            <ParametersSub name="TriggerPolarity_6" value="EXINT_TRIGGER_BOTH_EDGE"/>
+        </Parameters>
+    </EXINT>
+    <SYSTEM>
+        <Mode>
+            <ModeSub name="Time_Base" value="SysTick"/>
+            <ModeSub name="UART_Printf" value="USART1"/>
+        </Mode>
+        <Parameters>
+            <ParametersSub name="Delay_Mode" value="Interrupt"/>
+        </Parameters>
+    </SYSTEM>
+    <USART1>
+        <Mode>
+            <ModeSub name="Mode" value="Asynchronous"/>
+        </Mode>
+        <Parameters>
+            <ParametersSub name="RealBaudRate" value="115200"/>
+        </Parameters>
+    </USART1>
+    <FREERTOS>
+        <Mode>
+            <ModeSub name="Activated" value="TRUE"/>
+        </Mode>
+        <Parameters>
+            <ParametersSub name="MCU_SRAM_SIZE" value="393216"/>
+            <ParametersSub name="configCPU_CLOCK_HZ" value="288000000"/>
+            <ParametersSub name="USE_TICK_HOOK" value="1"/>
+            <ParametersSub name="configUSE_TIMERS" value="0"/>
+            <ParametersSub name="INCLUDE_xTimerPendFunctionCall" value="0"/>
+        </Parameters>
+        <Tasks>
+            <ParametersGroup>
+                <ParametersSub name="TaskName" value="defaultTask"/>
+                <ParametersSub name="TaskPriority" value="0"/>
+                <ParametersSub name="TaskStackSize" value="228"/>
+                <ParametersSub name="TaskEntryFunction" value="default_task"/>
+                <ParametersSub name="TaskCodeGenerationOption" value="Default"/>
+                <ParametersSub name="TaskParameters" value="NULL"/>
+                <ParametersSub name="TaskAllocation" value="Dynamic"/>
+                <ParametersSub name="TaskStackBuffer" value="NULL"/>
+                <ParametersSub name="TaskBuffer" value="NULL"/>
+            </ParametersGroup>
+            <ParametersGroup>
+                <ParametersSub name="TaskName" value="buttonTask"/>
+                <ParametersSub name="TaskPriority" value="0"/>
+                <ParametersSub name="TaskStackSize" value="228"/>
+                <ParametersSub name="TaskEntryFunction" value="button_task"/>
+                <ParametersSub name="TaskCodeGenerationOption" value="Default"/>
+                <ParametersSub name="TaskParameters" value="NULL"/>
+                <ParametersSub name="TaskAllocation" value="Dynamic"/>
+                <ParametersSub name="TaskStackBuffer" value="NULL"/>
+                <ParametersSub name="TaskBuffer" value="NULL"/>
+            </ParametersGroup>
+            <ParametersGroup>
+                <ParametersSub name="TaskName" value="ec11Task"/>
+                <ParametersSub name="TaskPriority" value="0"/>
+                <ParametersSub name="TaskStackSize" value="228"/>
+                <ParametersSub name="TaskEntryFunction" value="ec11_task"/>
+                <ParametersSub name="TaskCodeGenerationOption" value="Default"/>
+                <ParametersSub name="TaskParameters" value="NULL"/>
+                <ParametersSub name="TaskAllocation" value="Dynamic"/>
+                <ParametersSub name="TaskStackBuffer" value="NULL"/>
+                <ParametersSub name="TaskBuffer" value="NULL"/>
+            </ParametersGroup>
+        </Tasks>
+        <BinarySemaphores>
+            <ParametersGroup>
+                <ParametersSub name="BinarySemaphoreName" value="xEC11SemaphoreBinary"/>
+                <ParametersSub name="BinarySemaphoreAllocation" value="Dynamic"/>
+                <ParametersSub name="BinarySemaphoreBuffer" value="NULL"/>
+            </ParametersGroup>
+        </BinarySemaphores>
+    </FREERTOS>
+    <NVIC>
+        <PendSV_Handler>1;15;0;1;0</PendSV_Handler>
+        <SysTick_Handler>1;15;0;1;0</SysTick_Handler>
+        <FLASH_IRQHandler>0;5;0;1;0</FLASH_IRQHandler>
+        <CRM_IRQHandler>0;5;0;1;0</CRM_IRQHandler>
+        <EXINT9_5_IRQHandler>1;5;0;1;0</EXINT9_5_IRQHandler>
+        <USART1_IRQHandler>0;5;0;1;0</USART1_IRQHandler>
+        <DVP_IRQHandler>0;5;0;1;0</DVP_IRQHandler>
+        <FPU_IRQHandler>0;5;0;1;0</FPU_IRQHandler>
+    </NVIC>
+    <GPIO>
+        <Signal SignalName="GPIO_Output" PinName="PE3">
+            <Parameters name="Label" value="BUZZER"/>
+        </Signal>
+        <Signal SignalName="GPIO_Input" PinName="PF6">
+            <Parameters name="Label" value="EC11_SW"/>
+        </Signal>
+        <Signal SignalName="GPIO_Input" PinName="PF9">
+            <Parameters name="Label" value="EC11_B"/>
+        </Signal>
+        <Signal SignalName="GPIO_Input" PinName="PF10">
+            <Parameters name="GPIO_PullType_Set" value="GPIO_PULL_UP"/>
+            <Parameters name="Label" value="SW2"/>
+        </Signal>
+        <Signal SignalName="GPIO_Input" PinName="PF11">
+            <Parameters name="GPIO_PullType_Set" value="GPIO_PULL_UP"/>
+            <Parameters name="Label" value="SW1"/>
+        </Signal>
+        <Signal SignalName="GPIO_Output" PinName="PE9">
+            <Parameters name="Label" value="LCD_BLK"/>
+        </Signal>
+        <Signal SignalName="GPIO_Output" PinName="PG2">
+            <Parameters name="GPIO_Outputlevel" value="GPIO_OUTPUTLEVEL_HIGH"/>
+            <Parameters name="Label" value="LED3"/>
+        </Signal>
+        <Signal SignalName="GPIO_Output" PinName="PG3">
+            <Parameters name="GPIO_Outputlevel" value="GPIO_OUTPUTLEVEL_HIGH"/>
+            <Parameters name="Label" value="LED2"/>
+        </Signal>
+        <Signal SignalName="EXINT6" PinName="PG6">
+            <Parameters name="Label" value="EC11_A_EXINT6"/>
+        </Signal>
+        <Signal SignalName="GPIO_Input" PinName="PG7">
+            <Parameters name="GPIO_PullType_Set" value="GPIO_PULL_UP"/>
+            <Parameters name="Label" value="SW3"/>
+        </Signal>
+        <Signal SignalName="GPIO_Input" PinName="PG12">
+            <Parameters name="GPIO_PullType_Set" value="GPIO_PULL_UP"/>
+            <Parameters name="Label" value="SW4"/>
+        </Signal>
+    </GPIO>
+    <ClockConfiguration>
+        <rtcsel>0</rtcsel>
+        <rtcdiv>2</rtcdiv>
+        <hext>8.000000</hext>
+        <pllrcs>0</pllrcs>
+        <pllms>1</pllms>
+        <pllns>144</pllns>
+        <pllfr>4</pllfr>
+        <sclkselect>1</sclkselect>
+        <ahbdiv>1</ahbdiv>
+        <apb1div>2</apb1div>
+        <apb2div>2</apb2div>
+        <usbdiv>6.0</usbdiv>
+        <hicktousb>1</hicktousb>
+        <hicktosclk>0</hicktosclk>
+        <clkout1>0</clkout1>
+        <clkout1div1>1</clkout1div1>
+        <clkout1div2>1</clkout1div2>
+        <clkout2>0</clkout2>
+        <clkout2div1>1</clkout2div1>
+        <clkout2div2>1</clkout2div2>
+        <systicsel>1</systicsel>
+    </ClockConfiguration>
+    <PINInfo>
+        <PinSub pinname="PE3" signalname="GPIO_Output" signaltype="3"/>
+        <PinSub pinname="PC14/LEXT_IN" signalname="CRM_LEXT_IN" signaltype="2"/>
+        <PinSub pinname="PC15/LEXT_OUT" signalname="CRM_LEXT_OUT" signaltype="2"/>
+        <PinSub pinname="PF6" signalname="GPIO_Input" signaltype="3"/>
+        <PinSub pinname="PF9" signalname="GPIO_Input" signaltype="3"/>
+        <PinSub pinname="PF10" signalname="GPIO_Input" signaltype="3"/>
+        <PinSub pinname="PH0/HEXT_IN" signalname="CRM_HEXT_IN" signaltype="2"/>
+        <PinSub pinname="PH1/HEXT_OUT" signalname="CRM_HEXT_OUT" signaltype="2"/>
+        <PinSub pinname="PF11" signalname="GPIO_Input" signaltype="3"/>
+        <PinSub pinname="PE9" signalname="GPIO_Output" signaltype="3"/>
+        <PinSub pinname="PG2" signalname="GPIO_Output" signaltype="3"/>
+        <PinSub pinname="PG3" signalname="GPIO_Output" signaltype="3"/>
+        <PinSub pinname="PG6" signalname="EXINT6" signaltype="3"/>
+        <PinSub pinname="PG7" signalname="GPIO_Input" signaltype="3"/>
+        <PinSub pinname="PA9" signalname="USART1_TX" signaltype="2"/>
+        <PinSub pinname="PA10" signalname="USART1_RX" signaltype="2"/>
+        <PinSub pinname="PA13" signalname="DEBUG_JTMS_SWDIO" signaltype="2"/>
+        <PinSub pinname="PA14" signalname="DEBUG_JTCK_SWCLK" signaltype="2"/>
+        <PinSub pinname="PG12" signalname="GPIO_Input" signaltype="3"/>
+    </PINInfo>
+    <ProjectInfomation>
+        <ProjectName>ec11_example</ProjectName>
+        <ProjectLocation>D:/projects/at32_examples</ProjectLocation>
+        <ToolchainIDE>MDK_V5</ToolchainIDE>
+        <ARMCompiler>1</ARMCompiler>
+        <KeepUserCode>true</KeepUserCode>
+        <NotUsedPinAnalog>false</NotUsedPinAnalog>
+        <CodeSplitIP>true</CodeSplitIP>
+        <AddNecessaryFileFlag>true</AddNecessaryFileFlag>
+        <MinHeapSize>0x200</MinHeapSize>
+        <MinStackSize>0x400</MinStackSize>
+        <UseFirmware>true</UseFirmware>
+        <PackageVersion>V2.2.2</PackageVersion>
+    </ProjectInfomation>
+</Root>

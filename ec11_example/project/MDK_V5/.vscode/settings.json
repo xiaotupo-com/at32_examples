@@ -1,0 +1,8 @@
+{
+  "files.associations": {
+    "*.cpp": "cpp",
+    "*.mdx": "mdx",
+    "*.c": "c",
+    "ec11.h": "c"
+  }
+}
