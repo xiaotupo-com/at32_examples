@@ -2,7 +2,7 @@
  * @Author: 小土坡 xiaotupo@163.com
  * @Date: 2025-04-15 23:36:43
  * @LastEditors: 小土坡 xiaotupo@163.com
- * @LastEditTime: 2025-04-20 12:15:59
+ * @LastEditTime: 2025-04-20 14:59:51
  * @FilePath: \MDK_V5d:\projects\at32_examples\ec11_example\project\inc\freertos_app.h
  * @Description: 
  * 
@@ -30,28 +30,11 @@
 
 /* private includes -------------------------------------------------------------*/
 /* add user code begin private includes */
-#include "at32f435_437_wk_config.h"
+
 /* add user code end private includes */
 
 /* exported types -------------------------------------------------------------*/
 /* add user code begin exported types */
-#define NUM_BUTTONS 5
-#define DEBOUNCE_DELAY 15 // ms
-
-enum ButtonState_t { STATE_IDLE,
-                     STATE_PRESS_DEBOUNCE,
-                     STATE_PRESSED,
-                     STATE_RELEASE_DEBOUNCE,
-                     STATE_RELEASED };
-
-struct Button_t {
-    gpio_type *port;
-    uint16_t pin;
-    enum ButtonState_t state; // 状态机枚举
-    flag_status button_state; // 获取按钮状态
-    uint8_t debounce_count;   // 消抖次数
-    uint8_t id;               // 按键标识符 id
-};
 
 
 /* add user code end exported types */
