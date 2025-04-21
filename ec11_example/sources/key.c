@@ -2,7 +2,7 @@
  * @Author: 小土坡 xiaotupo@163.com
  * @Date: 2025-04-14 20:01:55
  * @LastEditors: 小土坡 xiaotupo@163.com
- * @LastEditTime: 2025-04-21 22:33:24
+ * @LastEditTime: 2025-04-22 01:50:45
  * @FilePath: \MDK_V5d:\projects\at32_examples\ec11_example\sources\key.c
  * @Description: 
  * 
@@ -15,7 +15,6 @@
 #include "led.h"
 #include "task.h"
 
-
 #define BUTTON_NUMBER 5 // 指定按键数量
 
 struct Button_t buttons[BUTTON_NUMBER] = {
@@ -25,6 +24,7 @@ struct Button_t buttons[BUTTON_NUMBER] = {
      .pin_state = RESET,
      .debounce_count = 0,
      .press_time = 0,
+     .long_press_mode = LONG_PRESS_MODE_ONCE,
      .id = 0},
     {.port = SW2_GPIO_PORT,
      .pin = SW2_PIN,
@@ -32,6 +32,7 @@ struct Button_t buttons[BUTTON_NUMBER] = {
      .pin_state = RESET,
      .debounce_count = 0,
      .press_time = 0,
+     .long_press_mode = LONG_PRESS_MODE_ONCE,
      .id = 1},
     {
         .port = SW3_GPIO_PORT,
@@ -40,6 +41,7 @@ struct Button_t buttons[BUTTON_NUMBER] = {
         .pin_state = RESET,
         .debounce_count = 0,
         .press_time = 0,
+        .long_press_mode = LONG_PRESS_MODE_ONCE,
         .id = 2,
     },
     {
@@ -49,6 +51,7 @@ struct Button_t buttons[BUTTON_NUMBER] = {
         .pin_state = RESET,
         .debounce_count = 0,
         .press_time = 0,
+        .long_press_mode = LONG_PRESS_MODE_ONCE,
         .id = 3,
     },
     {
@@ -58,6 +61,7 @@ struct Button_t buttons[BUTTON_NUMBER] = {
         .pin_state = RESET,
         .debounce_count = 0,
         .press_time = 0,
+        .long_press_mode = LONG_PRESS_MODE_ONCE,
         .id = 4,
     }};
 
@@ -69,6 +73,8 @@ void key_scanf(struct Button_t *buttons) {
     const uint8_t DEBOUNCE_COUNT = 2;
     // 定义长按时间（单位：ms）
     const uint16_t LONG_PRESS_TIME = 1000;
+    // 定义连续触发间隔时间（单位：ms）
+    const uint8_t CONTINUOUS_TRIGGER_INTERVAL = 200;
 
     // For 循环，依次处理所有按键
     for (int i = 0; i < BUTTON_NUMBER; i++) {
@@ -96,7 +102,6 @@ void key_scanf(struct Button_t *buttons) {
                 if (button->debounce_count >= DEBOUNCE_COUNT) {
                     button->state = STATE_PRESSED;
                     button->press_time = xTaskGetTickCount(); // 记录按下时间
-                    // 按键按下处理程序
                 }
             } else {
                 // 这里代表在STATE_PRESS_DEBOUNCE状态下按键有抖动或松开了按键
@@ -107,76 +112,86 @@ void key_scanf(struct Button_t *buttons) {
         case STATE_PRESSED: // 状态机的状态为按键成功按下
             // if 语句判断按键为高电平（松开），但还没有判断松开抖动
             // 所以下一步需要将状态机切换为松开抖动状态 STATE_RELEASE_DEBOUNCE
-            if (button->pin_state == TRUE) {
+            if (button->pin_state == SET) {
                 button->state = STATE_RELEASE_DEBOUNCE;
                 button->debounce_count = 0; // 清零消抖计数，以便在其他状态下使用
-                // 短按处理程序
-                printf("短按\n");
+
+#if PRESSED_PROCESS // 1️⃣ 短按处理程序
+                /********************************************************************************/
+                key_pressed_process(button);
+                /********************************************************************************/
+#enSETSET
             } else {
                 if ((xTaskGetTickCount() - (button->press_time)) >= pdMS_TO_TICKS(LONG_PRESS_TIME)) {
-                    button->state = STATE_LONG_PRESS;
-                    // 长按处理程序
-                    printf("长按\n");
+                    if (button->long_press_mode == LONG_PRESS_MODE_ONCE) {
+                        button->state = STATE_LONG_PRESS_ONCE;
+
+#if LONG_PRESS_ONCE // 2️⃣ 长按单次触发处理
+                        /********************************************************************************/
+                        key_long_press_once(button);
+                        /********************************************************************************/
+#endif
+                    } else {
+                        button->state = STATE_LONG_PRESS_CONTINUOUS;
+                        button->press_time = xTaskGetTickCount(); // 重置时间用于连续触发计时
+printf("长按连续触发第一次处理\n");
+#if LONG_PRESS_CONTINUOUS // 3️⃣ 长按连续触发第一次处理
+                        /********************************************************************************/
+                        key_long_press_continuous(button);
+                        /********************************************************************************/
+#endif
+                    }
                 }
             }
             break;
-        case STATE_LONG_PRESS:
-            if (button->pin_state == TRUE) {
+        case STATE_LONG_PRESS_ONCE:
+            // 如果按键松开了，则将状态机转为松开消抖状态
+            if (button->pin_state == SET) {
                 button->state = STATE_RELEASE_DEBOUNCE;
                 button->debounce_count = 0;
+            }
+            break;
+        case STATE_LONG_PRESS_CONTINUOUS:
+            if (button->pin_state == SET) {
+                button->state = STATE_RELEASE_DEBOUNCE;
+                button->debounce_count = 0;
+            } else {
+                if ((xTaskGetTickCount() - (button->press_time) >= pdMS_TO_TICKS(CONTINUOUS_TRIGGER_INTERVAL))) {
+                    button->press_time = xTaskGetTickCount(); // 重置时间
+
+#if LONG_PRESS_CONTINUOUS // 4️⃣ 长按连续触发
+                    /********************************************************************************/
+                    key_long_press_continuous(button);
+                    /********************************************************************************/
+#endif
+                }
             }
             break;
         case STATE_RELEASE_DEBOUNCE: // 松开消抖状态
         {
             // if 判断按键为松开（高电平）
-            if (button->pin_state == TRUE) {
+            if (button->pin_state == SET) {
                 button->debounce_count++; // 将按键消抖计数变量++
 
                 // 当debounce_count按键消抖计数变量大于指定的值后
                 // 将按键的状态机状态设置为 STATE_RELEASED，代表成功松开
                 if (button->debounce_count >= DEBOUNCE_COUNT) {
                     button->state = STATE_RELEASED;
-                    // 按键松开处理程序
-                    {
-                        buzzer.run_flag = 0x01;
-                        switch (button->id) {
-                        case 0: // 按键 SW1
-                            led2.run_flag = 0x01;
-                            led2.count_stop_value += 10;
-                            printf("SW1\n");
-                            break;
-                        case 1: // 按键 SW2
-                            led2.run_flag = 0x01;
-                            led2.count_stop_value -= 10;
-                            printf("SW2\n");
-                            break;
-                        case 2: // 按键 SW3
-                            led3.run_flag = 0x01;
-                            led3.count_stop_value += 10;
-                            printf("SW3\n");
-                            break;
-                        case 3: // 按键 SW4
-                            led3.run_flag = 0x01;
-                            led3.count_stop_value -= 10;
-                            printf("SW4\n");
-                            break;
-                        case 4: // 按键 EC11_SW
-                            led2.step_value++;
-                            led_stop(0);
-                            led_stop(1);
-                            printf("EC11_SW\n");
-                            break;
-                        default:
-                            break;
-                        }
-                    }
+
+#if RELEASED_PROCESS // 5️⃣ 按键松开处理程序
+                    /********************************************************************************/
+                    key_released_process(button);
+                    /********************************************************************************/
+#endif
                 }
             } else
             // 否则代表消抖计数变量没有达到设定的值或按键发生了抖动
             //将状态机的状态重新设定为STATE_PRESSED
             {
-                if (button->state == STATE_LONG_PRESS) {
-                    button->state = STATE_LONG_PRESS;
+                if (button->state == STATE_LONG_PRESS_ONCE) {
+                    button->state = STATE_LONG_PRESS_ONCE;
+                } else if (button->state == STATE_LONG_PRESS_CONTINUOUS) {
+                    button->state = STATE_LONG_PRESS_CONTINUOUS;
                 } else {
                     button->state = STATE_PRESSED;
                 }
@@ -185,7 +200,7 @@ void key_scanf(struct Button_t *buttons) {
         case STATE_RELEASED: // 状态机为 STATE_RELEASED，代表处于松开状态
 
             // if 判断按键为按下了
-            if (button->pin_state == FALSE) {
+            if (button->pin_state == RESET) {
                 // 再次将状态机的状态切换为 STATE_PRESS_DEBOUNCE
                 button->state = STATE_PRESS_DEBOUNCE;
                 button->debounce_count = 0; // 清零debounce_count，让 STATE_PRESS_DEBOUNCE 使用
@@ -194,3 +209,132 @@ void key_scanf(struct Button_t *buttons) {
         }
     }
 }
+
+#if RELEASED_PROCESS
+void key_released_process(struct Button_t *button) {
+
+    buzzer.run_flag = 0x01;
+    switch (button->id) {
+    case 0: // 按键 SW1
+        led2.run_flag = 0x01;
+        led2.count_stop_value += 10;
+        printf("released: SW1\n");
+        break;
+    case 1: // 按键 SW2
+        led2.run_flag = 0x01;
+        led2.count_stop_value -= 10;
+        printf("released: SW2\n");
+        break;
+    case 2: // 按键 SW3
+        led3.run_flag = 0x01;
+        led3.count_stop_value += 10;
+        printf("released: SW3\n");
+        break;
+    case 3: // 按键 SW4
+        led3.run_flag = 0x01;
+        led3.count_stop_value -= 10;
+        printf("released: SW4\n");
+        break;
+    case 4: // 按键 EC11_SW
+        led2.step_value++;
+        led_stop(0);
+        led_stop(1);
+        printf("released: EC11_SW\n");
+        break;
+    default:
+        break;
+    }
+}
+#endif
+
+#if PRESSED_PROCESS
+void key_pressed_process(struct Button_t *button) {
+    buzzer.run_flag = 0x01;
+    switch (button->id) {
+    case 0: // 按键 SW1
+        led2.run_flag = 0x01;
+        led2.count_stop_value += 10;
+        printf("pressed: SW1\n");
+        break;
+    case 1: // 按键 SW2
+        led2.run_flag = 0x01;
+        led2.count_stop_value -= 10;
+        printf("pressed: SW2\n");
+        break;
+    case 2: // 按键 SW3
+        led3.run_flag = 0x01;
+        led3.count_stop_value += 10;
+        printf("pressed: SW3\n");
+        break;
+    case 3: // 按键 SW4
+        led3.run_flag = 0x01;
+        led3.count_stop_value -= 10;
+        printf("pressed: SW4\n");
+        break;
+    case 4: // 按键 EC11_SW
+        led2.step_value++;
+        led_stop(0);
+        led_stop(1);
+        printf("pressed: EC11_SW\n");
+        break;
+    default:
+        break;
+    }
+}
+#endif
+
+#if LONG_PRESS_ONCE
+void key_long_press_once(struct Button_t *button) {
+    buzzer.run_flag = 0x01;
+    switch (button->id) {
+    case 0: // 按键 SW1
+
+        printf("long_press_once: SW1\n");
+        break;
+    case 1: // 按键 SW2
+
+        printf("long_press_once: SW2\n");
+        break;
+    case 2: // 按键 SW3
+        printf("long_press_once: SW3\n");
+        break;
+    case 3: // 按键 SW4
+
+        printf("long_press_once: SW4\n");
+        break;
+    case 4: // 按键 EC11_SW
+        printf("long_press_once: EC11_SW\n");
+        break;
+    default:
+        break;
+    }
+}
+#endif
+
+#if LONG_PRESS_CONTINUOUS
+void key_long_press_continuous(struct Button_t *button) {
+    buzzer.run_flag = 0x01;
+    switch (button->id) {
+    case 0: // 按键 SW1
+
+        printf("long_press_continuous: SW1\n");
+        break;
+    case 1: // 按键 SW2
+
+        printf("long_press_continuous: SW2\n");
+        break;
+    case 2: // 按键 SW3
+        printf("long_press_continuous: SW3\n");
+        break;
+    case 3: // 按键 SW4
+
+        printf("long_press_continuous: SW4\n");
+        break;
+    case 4: // 按键 EC11_SW
+        printf("long_press_continuous: EC11_SW\n");
+        break;
+    default:
+        break;
+    }
+}
+#endif
