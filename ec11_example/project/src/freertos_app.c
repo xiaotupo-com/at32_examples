@@ -227,7 +227,6 @@ void ec11_task(void *pvParameters) {
             printf("value: %d\r\n", led2.count_stop_value);
         }
         ec11.dir_flag = ROTATION_NONE;
-        //vTaskDelay(pdMS_TO_TICKS(10));
         /* add user code end ec11_task 1 */
     }
 }

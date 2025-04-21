@@ -2,26 +2,22 @@
  * @Author: 小土坡 xiaotupo@163.com
  * @Date: 2025-04-14 20:01:55
  * @LastEditors: 小土坡 xiaotupo@163.com
- * @LastEditTime: 2025-04-21 01:48:38
+ * @LastEditTime: 2025-04-21 22:33:24
  * @FilePath: \MDK_V5d:\projects\at32_examples\ec11_example\sources\key.c
  * @Description: 
  * 
  * Copyright (c) 2025 by 小土坡, All Rights Reserved. 
  */
 #include "key.h"
+#include "FreeRTOS.h"
 #include "at32f435_437_wk_config.h"
 #include "buzzer.h"
 #include "led.h"
+#include "task.h"
+
 
 #define BUTTON_NUMBER 5 // 指定按键数量
 
-// struct Button_t buttons[BUTTON_NUMBER] = {
-//     {SW1_GPIO_PORT, SW1_PIN, STATE_IDLE, RESET, 0, 0},
-//     {SW2_GPIO_PORT, SW2_PIN, STATE_IDLE, RESET, 0, 1},
-//     {SW3_GPIO_PORT, SW3_PIN, STATE_IDLE, RESET, 0, 2},
-//     {SW4_GPIO_PORT, SW4_PIN, STATE_IDLE, RESET, 0, 3},
-//     {EC11_SW_GPIO_PORT, EC11_SW_PIN, STATE_IDLE, RESET, 0, 4},
-// };
 struct Button_t buttons[BUTTON_NUMBER] = {
     {.port = SW1_GPIO_PORT,
      .pin = SW1_PIN,
@@ -65,7 +61,9 @@ struct Button_t buttons[BUTTON_NUMBER] = {
         .id = 4,
     }};
 
-// 按键扫描，需要放到 FreeRTOS 的按键任务中
+/**
+ * 按键扫描，需要放到 FreeRTOS 的按键任务中
+ */
 void key_scanf(struct Button_t *buttons) {
     // 消抖次数
     const uint8_t DEBOUNCE_COUNT = 2;
@@ -97,6 +95,7 @@ void key_scanf(struct Button_t *buttons) {
                 // 我们可以在这里执行成功按下需要处理的程序
                 if (button->debounce_count >= DEBOUNCE_COUNT) {
                     button->state = STATE_PRESSED;
+                    button->press_time = xTaskGetTickCount(); // 记录按下时间
                     // 按键按下处理程序
                 }
             } else {
@@ -111,6 +110,20 @@ void key_scanf(struct Button_t *buttons) {
             if (button->pin_state == TRUE) {
                 button->state = STATE_RELEASE_DEBOUNCE;
                 button->debounce_count = 0; // 清零消抖计数，以便在其他状态下使用
+                // 短按处理程序
+                printf("短按\n");
+            } else {
+                if ((xTaskGetTickCount() - (button->press_time)) >= pdMS_TO_TICKS(LONG_PRESS_TIME)) {
+                    button->state = STATE_LONG_PRESS;
+                    // 长按处理程序
+                    printf("长按\n");
+                }
+            }
+            break;
+        case STATE_LONG_PRESS:
+            if (button->pin_state == TRUE) {
+                button->state = STATE_RELEASE_DEBOUNCE;
+                button->debounce_count = 0;
             }
             break;
         case STATE_RELEASE_DEBOUNCE: // 松开消抖状态
@@ -162,7 +175,11 @@ void key_scanf(struct Button_t *buttons) {
             // 否则代表消抖计数变量没有达到设定的值或按键发生了抖动
             //将状态机的状态重新设定为STATE_PRESSED
             {
-                button->state = STATE_PRESSED;
+                if (button->state == STATE_LONG_PRESS) {
+                    button->state = STATE_LONG_PRESS;
+                } else {
+                    button->state = STATE_PRESSED;
+                }
             }
         } break;
         case STATE_RELEASED: // 状态机为 STATE_RELEASED，代表处于松开状态
