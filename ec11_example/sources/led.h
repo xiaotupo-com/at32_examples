@@ -1,3 +1,13 @@
+/*
+ * @Author: 小土坡 xiaotupo@163.com
+ * @Date: 2025-04-15 23:39:20
+ * @LastEditors: 小土坡 xiaotupo@163.com
+ * @LastEditTime: 2025-04-22 19:43:48
+ * @FilePath: \MDK_V5d:\projects\at32_examples\ec11_example\sources\led.h
+ * @Description: 
+ * 
+ * Copyright (c) 2025 by 小土坡, All Rights Reserved. 
+ */
 #ifndef __LED_H
 #define __LED_H
 
@@ -16,7 +26,7 @@ struct led_t {
     uint16_t count_value;
 	uint8_t step_value;
     uint32_t count_stop_value;
-	uint8_t run_flag;
+	uint8_t run_flag; // 0 运行 led_run(), 非零 停止运行 led_run()
 	enum led_id_t id;
 };
 

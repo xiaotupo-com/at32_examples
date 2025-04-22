@@ -84,13 +84,8 @@ void vApplicationTickHook(void) {
 
     /* add user code begin vApplicationTickHook */
 
-    if (led2.run_flag) {
-        led_run(&led2, led2_toggle);
-    }
-
-    if (led3.run_flag) {
-        led_run(&led3, led3_toggle);
-    }
+    led_run(&led2, led2_toggle);
+    led_run(&led3, led3_toggle);
 
     if (buzzer.run_flag) {
         buzzer_run();
@@ -187,7 +182,7 @@ void default_task(void *pvParameters) {
   */
 void button_task(void *pvParameters) {
     /* add user code begin button_task 0 */
-    
+
     /* add user code end button_task 0 */
 
     /* Infinite loop */

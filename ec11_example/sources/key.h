@@ -2,7 +2,7 @@
  * @Author: 小土坡 xiaotupo@163.com
  * @Date: 2025-04-15 23:39:20
  * @LastEditors: 小土坡 xiaotupo@163.com
- * @LastEditTime: 2025-04-22 01:06:53
+ * @LastEditTime: 2025-04-22 19:38:20
  * @FilePath: \MDK_V5d:\projects\at32_examples\ec11_example\sources\key.h
  * @Description: 
  * 
@@ -15,7 +15,7 @@
 
 #define RELEASED_PROCESS (0)      // 是否启用 key_released_process() 函数
 #define PRESSED_PROCESS (1)       // 是否启用 key_pressed_process() 函数
-#define LONG_PRESS_ONCE (0)       // 是否启用 key_long_press_once() 函数
+#define LONG_PRESS_ONCE (1)       // 是否启用 key_long_press_once() 函数
 #define LONG_PRESS_CONTINUOUS (1) // 是否启用 key_long_press_continuous() 函数
 
 // 按键状态机枚举类型定义
@@ -24,14 +24,15 @@ enum ButtonState_t {
     STATE_PRESS_DEBOUNCE,        // 按下消抖状态
     STATE_PRESSED,               // 成功按下状态
     STATE_LONG_PRESS_ONCE,       // 长按状态，单次触发
-    STATE_LONG_PRESS_CONTINUOUS, // 长按，连续触发
+    STATE_LONG_PRESS_CONTINUOUS, // 长按状态，连续触发
     STATE_RELEASE_DEBOUNCE,      //  释放消抖状态
     STATE_RELEASED               // 释放成功状态
 };
 
+// 长按模式枚举定义
 enum LongPressMode_t {
-    LONG_PRESS_MODE_ONCE,
-    LONG_PRESS_MODE_CONTINUOUS
+    LONG_PRESS_MODE_ONCE,      // 单次触发模式
+    LONG_PRESS_MODE_CONTINUOUS // 连续触发模式
 };
 
 // 按键结构体

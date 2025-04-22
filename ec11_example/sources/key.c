@@ -2,7 +2,7 @@
  * @Author: 小土坡 xiaotupo@163.com
  * @Date: 2025-04-14 20:01:55
  * @LastEditors: 小土坡 xiaotupo@163.com
- * @LastEditTime: 2025-04-22 01:50:45
+ * @LastEditTime: 2025-04-22 19:49:23
  * @FilePath: \MDK_V5d:\projects\at32_examples\ec11_example\sources\key.c
  * @Description: 
  * 
@@ -61,7 +61,7 @@ struct Button_t buttons[BUTTON_NUMBER] = {
         .pin_state = RESET,
         .debounce_count = 0,
         .press_time = 0,
-        .long_press_mode = LONG_PRESS_MODE_ONCE,
+        .long_press_mode = LONG_PRESS_MODE_CONTINUOUS,
         .id = 4,
     }};
 
@@ -120,7 +120,7 @@ void key_scanf(struct Button_t *buttons) {
                 /********************************************************************************/
                 key_pressed_process(button);
                 /********************************************************************************/
-#enSETSET
+#endif
             } else {
                 if ((xTaskGetTickCount() - (button->press_time)) >= pdMS_TO_TICKS(LONG_PRESS_TIME)) {
                     if (button->long_press_mode == LONG_PRESS_MODE_ONCE) {
@@ -134,7 +134,7 @@ void key_scanf(struct Button_t *buttons) {
                     } else {
                         button->state = STATE_LONG_PRESS_CONTINUOUS;
                         button->press_time = xTaskGetTickCount(); // 重置时间用于连续触发计时
-printf("长按连续触发第一次处理\n");
+                        printf("长按连续触发第一次处理\n");
 #if LONG_PRESS_CONTINUOUS // 3️⃣ 长按连续触发第一次处理
                         /********************************************************************************/
                         key_long_press_continuous(button);
@@ -211,34 +211,32 @@ printf("长按连续触发第一次处理\n");
 }
 
 #if RELEASED_PROCESS
+/**
+ * 松开处理程序，默认不适用该函数
+ * 通过宏定义 RELEASED_PROCESS 为 1 来启用该函数
+ */
 void key_released_process(struct Button_t *button) {
 
     buzzer.run_flag = 0x01;
     switch (button->id) {
     case 0: // 按键 SW1
-        led2.run_flag = 0x01;
-        led2.count_stop_value += 10;
+
         printf("released: SW1\n");
         break;
     case 1: // 按键 SW2
-        led2.run_flag = 0x01;
-        led2.count_stop_value -= 10;
+
         printf("released: SW2\n");
         break;
     case 2: // 按键 SW3
-        led3.run_flag = 0x01;
-        led3.count_stop_value += 10;
+
         printf("released: SW3\n");
         break;
     case 3: // 按键 SW4
-        led3.run_flag = 0x01;
-        led3.count_stop_value -= 10;
+
         printf("released: SW4\n");
         break;
     case 4: // 按键 EC11_SW
-        led2.step_value++;
-        led_stop(0);
-        led_stop(1);
+
         printf("released: EC11_SW\n");
         break;
     default:
@@ -248,33 +246,31 @@ void key_released_process(struct Button_t *button) {
 #endif
 
 #if PRESSED_PROCESS
+/**
+ * 按键成功按下处理程序（单击处理）
+ * 默认启用该函数
+ */
 void key_pressed_process(struct Button_t *button) {
-    buzzer.run_flag = 0x01;
+    buzzer.run_flag = 0x01; // 启动蜂鸣器响一下
     switch (button->id) {
     case 0: // 按键 SW1
-        led2.run_flag = 0x01;
-        led2.count_stop_value += 10;
+        
         printf("pressed: SW1\n");
         break;
     case 1: // 按键 SW2
-        led2.run_flag = 0x01;
-        led2.count_stop_value -= 10;
+        
         printf("pressed: SW2\n");
         break;
     case 2: // 按键 SW3
-        led3.run_flag = 0x01;
-        led3.count_stop_value += 10;
+        
         printf("pressed: SW3\n");
         break;
     case 3: // 按键 SW4
-        led3.run_flag = 0x01;
-        led3.count_stop_value -= 10;
+        
         printf("pressed: SW4\n");
         break;
     case 4: // 按键 EC11_SW
-        led2.step_value++;
-        led_stop(0);
-        led_stop(1);
+        
         printf("pressed: EC11_SW\n");
         break;
     default:
@@ -284,11 +280,14 @@ void key_pressed_process(struct Button_t *button) {
 #endif
 
 #if LONG_PRESS_ONCE
+/**
+ * 按键长按单次触发处理程序，根据按键的长按模式来确定该按键是否为单次触发
+ */
 void key_long_press_once(struct Button_t *button) {
     buzzer.run_flag = 0x01;
     switch (button->id) {
     case 0: // 按键 SW1
-
+        led2.run_flag = !led2.run_flag;
         printf("long_press_once: SW1\n");
         break;
     case 1: // 按键 SW2
@@ -296,6 +295,7 @@ void key_long_press_once(struct Button_t *button) {
         printf("long_press_once: SW2\n");
         break;
     case 2: // 按键 SW3
+        led3.run_flag = !led3.run_flag;
         printf("long_press_once: SW3\n");
         break;
     case 3: // 按键 SW4
@@ -312,6 +312,9 @@ void key_long_press_once(struct Button_t *button) {
 #endif
 
 #if LONG_PRESS_CONTINUOUS
+/**
+ * 长按连续触发，根据按键的长按模式来处理连续触发
+ */
 void key_long_press_continuous(struct Button_t *button) {
     buzzer.run_flag = 0x01;
     switch (button->id) {
