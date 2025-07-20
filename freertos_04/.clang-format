@@ -1,0 +1,19 @@
+BasedOnStyle: LLVM # LLVM, Google
+IndentWidth: 4
+ColumnLimit: 81
+
+AllowShortLoopsOnASingleLine:   true
+AllowShortBlocksOnASingleLine:  true
+NamespaceIndentation: All # 命名空间缩进 All None Inner
+AccessModifierOffset: 0
+
+BreakBeforeBraces: Custom
+
+BraceWrapping:
+  AfterControlStatement: true
+  AfterFunction: true
+  AfterEnum: true
+  AfterStruct: true
+  AfterClass: true
+  AfterNamespace: true
+  BeforeElse: true

@@ -22,4 +22,5 @@ void led_run(struct led_t *led, led_handle handle);
 void state_led_toggle(void);
 
 extern struct led_t state_led;
+
 #endif // __STATE_LED_H
