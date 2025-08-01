@@ -13,10 +13,10 @@
 
 #include "at32f435_437.h"
 
-#define RELEASED_PROCESS (0)      // 是否启用 key_released_process() 函数
-#define PRESSED_PROCESS (1)       // 是否启用 key_pressed_process() 函数
-#define LONG_PRESS_ONCE (1)       // 是否启用 key_long_press_once() 函数
-#define LONG_PRESS_CONTINUOUS (1) // 是否启用 key_long_press_continuous() 函数
+#define RELEASED_PROCESS (0)      // 是否启用 key_released_process() 函数 		: 释放处理
+#define PRESSED_PROCESS (1)       // 是否启用 key_pressed_process() 函数  		: 按下处理
+#define LONG_PRESS_ONCE (1)       // 是否启用 key_long_press_once() 函数  		: 长按单次触发
+#define LONG_PRESS_CONTINUOUS (1) // 是否启用 key_long_press_continuous() 函数	: 长按连续触发
 
 // 按键状态机枚举类型定义
 enum ButtonState_t {
@@ -25,7 +25,7 @@ enum ButtonState_t {
     STATE_PRESSED,               // 成功按下状态
     STATE_LONG_PRESS_ONCE,       // 长按状态，单次触发
     STATE_LONG_PRESS_CONTINUOUS, // 长按状态，连续触发
-    STATE_RELEASE_DEBOUNCE,      //  释放消抖状态
+    STATE_RELEASE_DEBOUNCE,      // 释放消抖状态
     STATE_RELEASED               // 释放成功状态
 };
 
