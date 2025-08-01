@@ -17,6 +17,7 @@
 - freertos_05 : 用 C++ 移植了 ST7789 驱动，实现了指定颜色点亮全屏的功能，并且主文件为 C 文件，也就是需要在 C 文件中调用 C++ 的接口，具体实现就是要为C++ 实现在 C 中调用的桥接文件。
 - freertos_06 : SPI DMA 发送实验
 - freertos_08 : 实现了 DMA + SPI 驱动 ST7789,全屏刷新率最高在 24FPS。
+- button-long-press : 按键长按例子，用到了位操做，操做 key_state 中的不同位代表不同的状态。
 
 	
 	

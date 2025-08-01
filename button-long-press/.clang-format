@@ -1,0 +1,5 @@
+BasedOnStyle: LLVM #LLVM,Google
+IndentWidth: 4 
+BreakBeforeBraces: Linux
+AllowShortLoopsOnASingleLine:   true
+AllowShortBlocksOnASingleLine:  true

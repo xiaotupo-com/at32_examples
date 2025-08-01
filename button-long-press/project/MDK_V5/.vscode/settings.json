@@ -1,0 +1,8 @@
+{
+    "files.associations": {
+        "*.cpp": "cpp",
+        "*.mdx": "mdx",
+        "sf_types.h": "c",
+        "sf_utils.h": "c"
+    }
+}
