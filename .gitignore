@@ -54,7 +54,3 @@ dkms.conf
 *.log
 
 **/objects
-
-**/libraries/cmsis
-**/libraries/drivers
-**/middlewares
