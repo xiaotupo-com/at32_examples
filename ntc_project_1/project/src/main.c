@@ -26,6 +26,8 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "at32f435_437_wk_config.h"
+#include "wk_adc.h"
+#include "wk_exint.h"
 #include "wk_usart.h"
 #include "wk_gpio.h"
 #include "wk_system.h"
@@ -33,7 +35,7 @@
 
 /* private includes ----------------------------------------------------------*/
 /* add user code begin private includes */
-
+#include "sf_system.h"
 /* add user code end private includes */
 
 /* private typedef -----------------------------------------------------------*/
@@ -74,7 +76,7 @@
 int main(void)
 {
   /* add user code begin 1 */
-
+	sf_system_init();
   /* add user code end 1 */
 
   /* system clock config. */
@@ -89,8 +91,17 @@ int main(void)
   /* init gpio function. */
   wk_gpio_config();
 
+  /* init adc-common function. */
+  wk_adc_common_init();
+
+  /* init adc3 function. */
+  wk_adc3_init();
+
   /* init usart1 function. */
   wk_usart1_init();
+
+  /* init exint function. */
+  wk_exint_config();
 
   /* init freertos function. */
   wk_freertos_init();

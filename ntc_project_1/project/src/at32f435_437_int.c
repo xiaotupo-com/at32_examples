@@ -28,7 +28,9 @@
 #include "at32f435_437_int.h"
 /* private includes ----------------------------------------------------------*/
 /* add user code begin private includes */
-
+#include "at32f435_437_wk_config.h"
+#include "freertos_app.h"
+#include "ec11.h"
 /* add user code end private includes */
 
 /* private typedef -----------------------------------------------------------*/
@@ -200,6 +202,56 @@ void SysTick_Handler(void)
   /* add user code begin SysTick_IRQ 1 */
 
   /* add user code end SysTick_IRQ 1 */
+}
+
+/**
+  * @brief  this function handles EXINT Line [9:5] handler.
+  * @param  none
+  * @retval none
+  */
+void EXINT9_5_IRQHandler(void)
+{
+  /* add user code begin EXINT9_5_IRQ 0 */
+BaseType_t xHigherPriorityTaskWoken = pdFALSE;
+
+    flag_status a_value = gpio_input_data_bit_read(EC11_A_EXINT6_GPIO_PORT, EC11_A_EXINT6_PIN);
+    flag_status b_value = gpio_input_data_bit_read(EC11_B_GPIO_PORT, EC11_B_PIN);
+
+    if (exint_flag_get(EXINT_LINE_6) != RESET) {
+
+        if (a_value == RESET && ec11.count == 0) /* 判断A相是下降沿并且 count=0 */
+        {
+            ec11.b_flag = 0;  /* 给B相标志位赋值0 */
+            if (b_value) /* 这里要判断B相的状态，如果是高电平则把B相标志位赋值1 */
+                ec11.b_flag = 1;
+            ec11.count = 1; /* 中断计数变量赋值1 */
+        }
+
+        if (a_value == SET && ec11.count == 1) /* 判断A相是上升沿并且 count=1  0 to 1 */
+        {
+            if (b_value == RESET && ec11.b_flag == 1) /* 判断旋转方向：B相波形为：1 to 0 */
+            {
+                ec11.action = EC11_ACTION_CCW;
+				xSemaphoreGiveFromISR(xEC11SemaphoreBinary_handle, &xHigherPriorityTaskWoken);
+            }
+            if (b_value && ec11.b_flag == 0) /* 判断旋转方向：B相波形为：0 to 1 */
+            {
+                ec11.action = EC11_ACTION_CW;
+				xSemaphoreGiveFromISR(xEC11SemaphoreBinary_handle, &xHigherPriorityTaskWoken);
+            }
+            ec11.count = 0;
+        }
+
+		if(xHigherPriorityTaskWoken == pdTRUE) {
+			
+			portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
+		}
+        exint_flag_clear(EXINT_LINE_6);
+    }
+  /* add user code end EXINT9_5_IRQ 0 */
+  /* add user code begin EXINT9_5_IRQ 1 */
+
+  /* add user code end EXINT9_5_IRQ 1 */
 }
 
 /* add user code begin 1 */

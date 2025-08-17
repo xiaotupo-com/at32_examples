@@ -40,8 +40,17 @@
 
 /* task handler */
 extern TaskHandle_t default_task_handle;
+extern TaskHandle_t ec11_task_handle;
+extern TaskHandle_t key_task_handle;
+extern TaskHandle_t get_temp_task_handle;
 /* declaration for task function */
 void default_task_func(void *pvParameters);
+void ec11_task_func(void *pvParameters);
+void key_task_func(void *pvParameters);
+void get_temp_task_func(void *pvParameters);
+
+/* binary semaphore handler */
+extern SemaphoreHandle_t xEC11SemaphoreBinary_handle;
 
 /* mutex handler */
 extern SemaphoreHandle_t lcdMutex_handle;

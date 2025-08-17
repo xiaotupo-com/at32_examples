@@ -8,6 +8,24 @@
         <MCUName>AT32F437ZGT7</MCUName>
         <MCUPackage>LQFP144</MCUPackage>
     </MCUInfo>
+    <ADC-Common>
+        <Mode>
+            <ModeSub name="Activated" value="TRUE"/>
+        </Mode>
+        <Parameters>
+            <ParametersSub name="Clock" value="72000000"/>
+        </Parameters>
+    </ADC-Common>
+    <ADC3>
+        <Mode>
+            <ModeSub name="IN14" value="TRUE"/>
+        </Mode>
+        <Parameters>
+            <ParametersSub name="EnableOrdinaryConversion" value="ENABLE"/>
+            <ParametersSub name="Channel_OrdinarySequence_1" value="ADC_CHANNEL_14"/>
+            <ParametersSub name="SamplingRate_OrdinarySequence_1" value="4.800"/>
+        </Parameters>
+    </ADC3>
     <CRM>
         <Mode>
             <ModeSub name="HEXT" value="HEXT-External-Oscillator"/>
@@ -23,6 +41,14 @@
             <ModeSub name="Debug interface" value="SWD"/>
         </Mode>
     </DEBUG>
+    <EXINT>
+        <Mode>
+            <ModeSub name="EXINT6" value="TRUE"/>
+        </Mode>
+        <Parameters>
+            <ParametersSub name="TriggerPolarity_6" value="EXINT_TRIGGER_BOTH_EDGE"/>
+        </Parameters>
+    </EXINT>
     <SYSTEM>
         <Mode>
             <ModeSub name="Time_Base" value=""/>
@@ -50,8 +76,41 @@
             <ParametersGroup>
                 <ParametersSub name="TaskName" value="default_task"/>
                 <ParametersSub name="TaskPriority" value="0"/>
-                <ParametersSub name="TaskStackSize" value="128"/>
+                <ParametersSub name="TaskStackSize" value="512"/>
                 <ParametersSub name="TaskEntryFunction" value="default_task_func"/>
+                <ParametersSub name="TaskCodeGenerationOption" value="Default"/>
+                <ParametersSub name="TaskParameters" value="NULL"/>
+                <ParametersSub name="TaskAllocation" value="Dynamic"/>
+                <ParametersSub name="TaskStackBuffer" value="NULL"/>
+                <ParametersSub name="TaskBuffer" value="NULL"/>
+            </ParametersGroup>
+            <ParametersGroup>
+                <ParametersSub name="TaskName" value="ec11_task"/>
+                <ParametersSub name="TaskPriority" value="1"/>
+                <ParametersSub name="TaskStackSize" value="512"/>
+                <ParametersSub name="TaskEntryFunction" value="ec11_task_func"/>
+                <ParametersSub name="TaskCodeGenerationOption" value="Default"/>
+                <ParametersSub name="TaskParameters" value="NULL"/>
+                <ParametersSub name="TaskAllocation" value="Dynamic"/>
+                <ParametersSub name="TaskStackBuffer" value="NULL"/>
+                <ParametersSub name="TaskBuffer" value="NULL"/>
+            </ParametersGroup>
+            <ParametersGroup>
+                <ParametersSub name="TaskName" value="key_task"/>
+                <ParametersSub name="TaskPriority" value="0"/>
+                <ParametersSub name="TaskStackSize" value="512"/>
+                <ParametersSub name="TaskEntryFunction" value="key_task_func"/>
+                <ParametersSub name="TaskCodeGenerationOption" value="Default"/>
+                <ParametersSub name="TaskParameters" value="NULL"/>
+                <ParametersSub name="TaskAllocation" value="Dynamic"/>
+                <ParametersSub name="TaskStackBuffer" value="NULL"/>
+                <ParametersSub name="TaskBuffer" value="NULL"/>
+            </ParametersGroup>
+            <ParametersGroup>
+                <ParametersSub name="TaskName" value="get_temp_task"/>
+                <ParametersSub name="TaskPriority" value="0"/>
+                <ParametersSub name="TaskStackSize" value="512"/>
+                <ParametersSub name="TaskEntryFunction" value="get_temp_task_func"/>
                 <ParametersSub name="TaskCodeGenerationOption" value="Default"/>
                 <ParametersSub name="TaskParameters" value="NULL"/>
                 <ParametersSub name="TaskAllocation" value="Dynamic"/>
@@ -66,22 +125,40 @@
                 <ParametersSub name="MutexBuffer" value="NULL"/>
             </ParametersGroup>
         </Mutexes>
+        <BinarySemaphores>
+            <ParametersGroup>
+                <ParametersSub name="BinarySemaphoreName" value="xEC11SemaphoreBinary"/>
+                <ParametersSub name="BinarySemaphoreAllocation" value="Dynamic"/>
+                <ParametersSub name="BinarySemaphoreBuffer" value="NULL"/>
+            </ParametersGroup>
+        </BinarySemaphores>
     </FREERTOS>
     <NVIC>
         <PendSV_Handler>1;15;0;1;0</PendSV_Handler>
         <SysTick_Handler>1;15;0;1;0</SysTick_Handler>
         <FLASH_IRQHandler>0;5;0;1;0</FLASH_IRQHandler>
         <CRM_IRQHandler>0;5;0;1;0</CRM_IRQHandler>
+        <ADC1_2_3_IRQHandler>0;5;0;1;0</ADC1_2_3_IRQHandler>
+        <EXINT9_5_IRQHandler>1;5;0;1;0</EXINT9_5_IRQHandler>
         <USART1_IRQHandler>0;5;0;1;0</USART1_IRQHandler>
         <DVP_IRQHandler>0;5;0;1;0</DVP_IRQHandler>
         <FPU_IRQHandler>0;5;0;1;0</FPU_IRQHandler>
     </NVIC>
     <GPIO>
+        <Signal SignalName="GPIO_Output" PinName="PE3">
+            <Parameters name="Label" value="BUZZER"/>
+        </Signal>
         <Signal SignalName="GPIO_Output" PinName="PE4">
             <Parameters name="Label" value="LCD1602_D4"/>
         </Signal>
+        <Signal SignalName="GPIO_Input" PinName="PF6">
+            <Parameters name="Label" value="EC11_SW"/>
+        </Signal>
         <Signal SignalName="GPIO_Output" PinName="PF8">
             <Parameters name="Label" value="LCD1602_D7"/>
+        </Signal>
+        <Signal SignalName="GPIO_Input" PinName="PF9">
+            <Parameters name="Label" value="EC11_B"/>
         </Signal>
         <Signal SignalName="GPIO_Output" PinName="PD13">
             <Parameters name="Label" value="LCD1602_D6"/>
@@ -96,6 +173,9 @@
         </Signal>
         <Signal SignalName="GPIO_Output" PinName="PG4">
             <Parameters name="Label" value="LCD1602_D5"/>
+        </Signal>
+        <Signal SignalName="EXINT6" PinName="PG6">
+            <Parameters name="Label" value="EC11_A_EXINT6"/>
         </Signal>
         <Signal SignalName="GPIO_Output" PinName="PD2">
             <Parameters name="Label" value="LCD1602_RW"/>
@@ -131,16 +211,21 @@
         <systicsel>1</systicsel>
     </ClockConfiguration>
     <PINInfo>
+        <PinSub pinname="PE3" signalname="GPIO_Output" signaltype="3"/>
         <PinSub pinname="PE4" signalname="GPIO_Output" signaltype="3"/>
         <PinSub pinname="PC14/LEXT_IN" signalname="CRM_LEXT_IN" signaltype="2"/>
         <PinSub pinname="PC15/LEXT_OUT" signalname="CRM_LEXT_OUT" signaltype="2"/>
+        <PinSub pinname="PF4" signalname="ADC3_IN14" signaltype="3"/>
+        <PinSub pinname="PF6" signalname="GPIO_Input" signaltype="3"/>
         <PinSub pinname="PF8" signalname="GPIO_Output" signaltype="3"/>
+        <PinSub pinname="PF9" signalname="GPIO_Input" signaltype="3"/>
         <PinSub pinname="PH0/HEXT_IN" signalname="CRM_HEXT_IN" signaltype="2"/>
         <PinSub pinname="PH1/HEXT_OUT" signalname="CRM_HEXT_OUT" signaltype="2"/>
         <PinSub pinname="PD13" signalname="GPIO_Output" signaltype="3"/>
         <PinSub pinname="PG2" signalname="GPIO_Output" signaltype="3"/>
         <PinSub pinname="PG3" signalname="GPIO_Output" signaltype="3"/>
         <PinSub pinname="PG4" signalname="GPIO_Output" signaltype="3"/>
+        <PinSub pinname="PG6" signalname="EXINT6" signaltype="3"/>
         <PinSub pinname="PA9" signalname="USART1_TX" signaltype="2"/>
         <PinSub pinname="PA10" signalname="USART1_RX" signaltype="2"/>
         <PinSub pinname="PA13" signalname="DEBUG_JTMS_SWDIO" signaltype="2"/>
@@ -151,7 +236,7 @@
     </PINInfo>
     <ProjectInfomation>
         <ProjectName>ntc_project_1</ProjectName>
-        <ProjectLocation>D:/dev/at32_examples</ProjectLocation>
+        <ProjectLocation>D:/dev/at32_examples/ntc_project_1</ProjectLocation>
         <ToolchainIDE>MDK_V5</ToolchainIDE>
         <ARMCompiler>1</ARMCompiler>
         <KeepUserCode>true</KeepUserCode>

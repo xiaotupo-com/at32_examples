@@ -164,10 +164,16 @@ extern "C" {
 /* add user code end dma define */
 
 /* Private defines -------------------------------------------------------------*/
+#define BUZZER_PIN    GPIO_PINS_3
+#define BUZZER_GPIO_PORT    GPIOE
 #define LCD1602_D4_PIN    GPIO_PINS_4
 #define LCD1602_D4_GPIO_PORT    GPIOE
+#define EC11_SW_PIN    GPIO_PINS_6
+#define EC11_SW_GPIO_PORT    GPIOF
 #define LCD1602_D7_PIN    GPIO_PINS_8
 #define LCD1602_D7_GPIO_PORT    GPIOF
+#define EC11_B_PIN    GPIO_PINS_9
+#define EC11_B_GPIO_PORT    GPIOF
 #define LCD1602_D6_PIN    GPIO_PINS_13
 #define LCD1602_D6_GPIO_PORT    GPIOD
 #define LED3_PIN    GPIO_PINS_2
@@ -176,6 +182,8 @@ extern "C" {
 #define LED2_GPIO_PORT    GPIOG
 #define LCD1602_D5_PIN    GPIO_PINS_4
 #define LCD1602_D5_GPIO_PORT    GPIOG
+#define EC11_A_EXINT6_PIN    GPIO_PINS_6
+#define EC11_A_EXINT6_GPIO_PORT    GPIOG
 #define LCD1602_RW_PIN    GPIO_PINS_2
 #define LCD1602_RW_GPIO_PORT    GPIOD
 #define LCD1602_RS_PIN    GPIO_PINS_9
