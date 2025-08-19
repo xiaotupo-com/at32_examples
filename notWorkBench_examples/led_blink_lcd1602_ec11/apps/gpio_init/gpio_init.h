@@ -1,0 +1,38 @@
+#ifndef __GPIO_INIT_H
+#define __GPIO_INIT_H
+
+#include "at32f435_437.h"
+
+#define LED2_PORT GPIOG
+#define LED2_PIN GPIO_PINS_3
+#define LED3_PORT GPIOG
+#define LED3_PIN GPIO_PINS_2
+
+#define LCD1602_RS_PORT GPIOG
+#define LCD1602_RW_PORT GPIOD
+#define LCD1602_EN_PORT GPIOG
+#define LCD1602_D4_PORT GPIOE
+#define LCD1602_D5_PORT GPIOG
+#define LCD1602_D6_PORT GPIOD
+#define LCD1602_D7_PORT GPIOF
+
+#define LCD1602_RS_PIN GPIO_PINS_9
+#define LCD1602_RW_PIN GPIO_PINS_2
+#define LCD1602_EN_PIN GPIO_PINS_10
+#define LCD1602_D4_PIN GPIO_PINS_4
+#define LCD1602_D5_PIN GPIO_PINS_4
+#define LCD1602_D6_PIN GPIO_PINS_13
+#define LCD1602_D7_PIN GPIO_PINS_8
+
+#define BUZZER_PORT GPIOE
+#define BUZZER_PIN GPIO_PINS_3
+
+#define EC11_SW_GPIO_PORT GPIOF
+#define EC11_SW_PIN       GPIO_PINS_6
+
+namespace xtp::gpio
+{
+    void init(void);
+}
+
+#endif
