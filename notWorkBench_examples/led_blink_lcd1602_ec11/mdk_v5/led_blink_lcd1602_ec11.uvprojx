@@ -338,7 +338,7 @@
               <MiscControls></MiscControls>
               <Define>AT32F437ZGT7,USE_STDPERIPH_DRIVER</Define>
               <Undefine></Undefine>
-              <IncludePath>..\libraries\drivers\inc;..\libraries\cmsis\cm4\core_support;..\libraries\cmsis\cm4\device_support;..\inc;..\middlewares\freertos\source\include;..\apps\include;..\middlewares\freertos\source\portable\GCC\ARM_CM4F;..\apps\led;..\apps\v_application_tick_hook;..\apps\gpio_init;..\apps\freertos_app;..\apps\lcd1602;..\apps\us_delay;..\apps\buzzer;..\apps\key</IncludePath>
+              <IncludePath>..\libraries\drivers\inc;..\libraries\cmsis\cm4\core_support;..\libraries\cmsis\cm4\device_support;..\inc;..\middlewares\freertos\source\include;..\apps\include;..\middlewares\freertos\source\portable\GCC\ARM_CM4F;..\apps\led;..\apps\v_application_tick_hook;..\apps\gpio_init;..\apps\freertos_app;..\apps\lcd1602;..\apps\us_delay;..\apps\buzzer;..\apps\key;..\apps\system;..\apps\ntc</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -411,6 +411,11 @@
               <FileName>printf_config.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\src\printf_config.c</FilePath>
+            </File>
+            <File>
+              <FileName>adc_config.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\src\adc_config.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -659,6 +664,16 @@
               <FileName>key.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\apps\key\key.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>System.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\apps\system\System.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>ntc.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\apps\ntc\ntc.cpp</FilePath>
             </File>
           </Files>
         </Group>

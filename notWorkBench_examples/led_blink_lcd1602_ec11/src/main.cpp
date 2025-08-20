@@ -14,6 +14,7 @@
 #include "nvic_config.h"
 #include "uart_config.h"
 #include <stdio.h>
+#include "adc_config.h"
 
 /**
  * @brief  init rtc clock function
@@ -61,6 +62,8 @@ int main(void)
     mx_rtc_clock_init();
 	
 	usart1_init();
+
+    adc_common_init();
 
     xtp::gpio::init();
     freertos_app_init();

@@ -45,7 +45,8 @@ void Lcd1602::writeCmd(uint8_t cmd)
     LCD_RW(0);
     write4(cmd >> 4);
     write4(cmd & 0x0F);
-    vTaskDelay(pdMS_TO_TICKS(2));
+    // vTaskDelay(pdMS_TO_TICKS(2));
+    delay_us(45);
 }
 
 void Lcd1602::writeData(uint8_t data)
@@ -54,7 +55,8 @@ void Lcd1602::writeData(uint8_t data)
     LCD_RW(0);
     write4(data >> 4);
     write4(data & 0x0F);
-    vTaskDelay(pdMS_TO_TICKS(2));
+    // vTaskDelay(pdMS_TO_TICKS(2));
+    delay_us(45);
 }
 
 /**

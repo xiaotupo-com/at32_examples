@@ -3,14 +3,26 @@
 
 #include "at32f435_437.h"
 
-struct ntc_t {
-	float h_value;
-	float l_value;
-	float value;
-	float (*get_temp)(uint16_t adc_val);
-	void (*set_h)(struct ntc_t *, float value);
-	void (*set_l)(struct ntc_t *, float value);
-};
+namespace xtp
+{
+    // Note Ntc 温度探头类
+    class Ntc
+    {
+    public:
+        Ntc(float high, float low);
+        void setHighValue(float high);
+        float getHighValue(void);
+        void setLowValue(float low);
+        float getLowValue(void);
+		float get_temp(uint16_t adc_val);
+		void setCurrentTemp(float temp);
+		float getCurrentTemp(void);
 
-extern struct ntc_t ntc1;
+    private:
+        float m_currentTemp; /* 当前温度 */
+        float m_highValue;   /* 高温报警值 */
+        float m_lowValue;    /* 低温报警值*/
+    };
+}  // namespace xtp
+
 #endif

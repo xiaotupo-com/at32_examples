@@ -42,6 +42,14 @@ private:
     void write4(uint8_t data);
     void writeCmd(uint8_t cmd);
 	void writeData(uint8_t data);
+
+	uint8_t edit_mode; /* 0=编辑电压，1=编辑电流 */
+	uint8_t voltage_index; /* 三位整数，一位小数 */
+	uint8_t current_index; /* 三位整数，一位小数 */
+
+	const uint8_t voltage_digit_cols[4] = {7, 8, 9, 11};
+	const uint8_t current_digit_cols[4] = {7, 8, 9, 11};
+
 };
 
 #endif /* __LCD1602_H */
